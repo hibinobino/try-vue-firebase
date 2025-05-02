@@ -13,7 +13,7 @@ import {
 const auth = getAuth();
 
 const googleLogout = () => {
-  signOut(auth())
+  signOut(auth)
     .then(() => {
       console.log("Signed out successfully.");
       // Sign-out successful.
