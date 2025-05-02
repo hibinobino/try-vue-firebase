@@ -1,4 +1,6 @@
 <script setup>
+import LoginScreen from "./components/LoginScreen.vue"
+
 /*---firebase---*/
 
 // Import the functions you need from the SDKs you need
@@ -20,7 +22,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 </script>
 
-<template>  
+<template>
+  <LoginScreen />
 </template>
 
 <style scoped>
