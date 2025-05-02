@@ -20,6 +20,45 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+
+import {
+  getAuth,
+  getRedirectResult,
+  GoogleAuthProvider,
+  onAuthStateChanged
+} from "firebase/auth";
+import { ref } from "vue";
+
+const isLoggedIn = ref(false);
+
+getRedirectResult(getAuth())
+  .then((result) => {
+    if (result) {
+      console.log("Logged in successfully.");
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      const user = result.user;
+      // ...
+    }
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    const email = error.customData.email;
+    const credential = GoogleAuthProvider.credentialFromError(error);
+  });
+
+onAuthStateChanged(getAuth(), (user) => {
+  console.log("checkAuthState: " + user);
+  if (user) {
+    console.log("Logged in successfully.");
+    isLoggedIn.value = true;
+  } else {
+    console.log("Not logged in.");
+    isLoggedIn.value = false;
+  }
+});
 </script>
 
 <template>
