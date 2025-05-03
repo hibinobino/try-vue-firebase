@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import LogoutScreen from "./LogoutScreen.vue"
+import LogoutScreen from "./LogoutScreen.vue";
 
 import { getAuth } from "firebase/auth";
 import {
@@ -18,13 +18,16 @@ import {
   Timestamp,
   getDoc,
   updateDoc,
+  serverTimestamp,
 } from "firebase/firestore";
+import { onMounted } from "vue";
 
 const props = defineProps({
   db: Firestore,
   userUid: String,
 });
 const auth = getAuth();
+const user = auth.currentUser;
 
 // Add a new document in collection "cities"
 const addDocument = () => {
@@ -50,27 +53,38 @@ const getDocument = async () => {
 };
 
 //初回ログイン時、usersコレクションにユーザーを追加する
-(() => {
-  console.log("Checking for user data...")
-  getDoc(doc(props.db, "users", props.uid)) //ユーザーデータを取得する
-    .then((userDoc) => {
-      //取得できればデータを更新する
-      updateDoc(userDoc, {
-        loginDateTime: Timestamp.now(), //ログイン日時
-      }).then(()=>{
-        console.log("updated user data: loginDateTime.")
-      })
+onMounted(() => {
+  console.log("Checking for user data: " +user.uid);
+  const docRef = doc(props.db, "users", user.uid);
+
+  getDoc(docRef)
+    .then((docSnap) => {
+      if (docSnap.exists()) {
+        console.log("Existing user signed in.");
+        //取得できればユーザーデータを更新する
+        updateDoc(docRef, {
+          loginDateTime: serverTimestamp(), //ログイン日時を更新する
+        }).then(() => {
+          console.log("Updated user data: loginDateTime.");
+        }).catch((error) =>{
+          console.log(error.message)
+        });
+      } else {
+        console.log("New user signed in.");
+        //取得できなかった場合は初回ログインとして
+        //新規にユーザーデータを作成する
+        setDoc(docRef, {
+          email: user.email,
+          createdDateTime: serverTimestamp(),
+          loginDateTime: serverTimestamp(),
+        }).then(() => {
+          console.log("created user data.");
+        }).catch((error) =>{
+          console.log(error.message)
+        });
+      }
     })
-    .error(() => {
-      //取得できなかったらデータを新規に追加する
-      setDoc(doc(props.db, "users", props.uid), {
-        email: auth.getUser(props.uid).email,
-        createdDateTime: Timestamp.now(),
-        loginDateTime: Timestamp.now(),
-      }).then(()=>{
-        console.log("created user data.")
-      });
-    });
+    .catch((error) => {});
 });
 </script>
 
