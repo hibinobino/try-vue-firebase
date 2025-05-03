@@ -16,7 +16,6 @@ import {
   onAuthStateChanged
 } from "firebase/auth";
 
-const auth = getAuth()
 const isLoggedIn = ref(false);
 const userUid = ref("")
 
@@ -31,6 +30,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth()
 
 //ログイン状態を確認
 onAuthStateChanged(auth, (user) => {
