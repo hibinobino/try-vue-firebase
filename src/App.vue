@@ -1,12 +1,10 @@
 <template>
   <LoginScreen v-if="!isLoggedIn" />
   <UserScreen :db="db" :userUid="userUid" v-if="isLoggedIn" />
-  <LogoutScreen v-if="isLoggedIn" />
-</template>
+  </template>
 
 <script setup>
 import LoginScreen from "./components/LoginScreen.vue"
-import LogoutScreen from "./components/LogoutScreen.vue"
 import UserScreen from "./components/UserScreen.vue"
 import { ref } from "vue";
 import { initializeApp } from "firebase/app";

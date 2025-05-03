@@ -2,10 +2,13 @@
   <div>
     <button @click="addDocument">addDocument</button>
     <button @click="getDocument">getDocument</button>
+    <LogoutScreen />
   </div>
 </template>
 
 <script setup>
+import LogoutScreen from "./LogoutScreen.vue"
+
 import { getAuth } from "firebase/auth";
 import {
   collection,
@@ -47,7 +50,8 @@ const getDocument = async () => {
 };
 
 //初回ログイン時、usersコレクションにユーザーを追加する
-created(() => {
+(() => {
+  console.log("Checking for user data...")
   getDoc(doc(props.db, "users", props.uid)) //ユーザーデータを取得する
     .then((userDoc) => {
       //取得できればデータを更新する
