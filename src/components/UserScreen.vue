@@ -6,7 +6,10 @@
       <button @click="addPage">addNewPage</button>
     </div>
     <div>
-      <li v-for="page in pages">{{ page.createdDateTime }}</li>
+      <li v-for="page in pages">
+        {{ page.id }} // {{ page.data.uid
+        }}<button @click="deletePage(page.id)">Delete</button>
+      </li>
     </div>
     <LogoutScreen />
   </div>
@@ -29,6 +32,7 @@ import {
   query,
   getDocs,
   where,
+  deleteDoc,
 } from "firebase/firestore";
 import { ref, onMounted } from "vue";
 
@@ -74,12 +78,21 @@ const addPage = () => {
   })
     .then(() => {
       console.log("Created new page.");
-      loadPages()
+      loadPages();
     })
     .catch((error) => {
       console.log(error.message);
     });
-    
+};
+
+const deletePage = (pageId) => {
+  deleteDoc(doc(props.db, "pages", pageId))
+    .then(() => {
+      loadPages();
+    })
+    .catch((error) => {
+      console.log(error.message);
+    });
 };
 
 //初回ログイン時、usersコレクションにユーザーを追加する
@@ -130,7 +143,10 @@ const loadPages = () => {
     where("uid", "==", user.uid)
   );
   getDocs(pagesQuery).then((pagesDocs) => {
-    pages.value = pagesDocs.docs.map((pagedoc) => pagedoc.data());
+    pages.value = pagesDocs.docs.map((pagedoc) => ({
+      id: pagedoc.id,
+      data: pagedoc.data(),
+    }));
   });
 };
 </script>
