@@ -2,6 +2,9 @@
   <div>
     <button @click="addDocument">addDocument</button>
     <button @click="getDocument">getDocument</button>
+    <div>
+      <button @click="addPage">addNewPage</button>
+    </div>
     <LogoutScreen />
   </div>
 </template>
@@ -19,6 +22,7 @@ import {
   getDoc,
   updateDoc,
   serverTimestamp,
+  addDoc,
 } from "firebase/firestore";
 import { onMounted } from "vue";
 
@@ -51,6 +55,18 @@ const getDocument = async () => {
     alert("No such document!");
   }
 };
+const addPage = () => {
+  //pagesコレクションに自動IDでページを追加
+  addDoc(collection(props.db, "pages"), {
+    name: "New Page",
+    uid: user.uid,
+    createdDateTime: serverTimestamp()
+  }).then(()=>{
+    console.log("Created new page.")
+  }).catch((error) =>{
+    console.log(error.message)
+  })
+}
 
 //初回ログイン時、usersコレクションにユーザーを追加する
 onMounted(() => {
