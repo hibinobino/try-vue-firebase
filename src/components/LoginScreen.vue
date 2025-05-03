@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="googleLogin">Login with Google Account</button>
+    <GoogleButton @click="googleLogin" />
   </div>
 </template>
 
@@ -10,6 +10,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
+import GoogleButton from "./GoogleButton.vue"
 
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
