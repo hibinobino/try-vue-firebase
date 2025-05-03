@@ -5,6 +5,9 @@
     <div>
       <button @click="addPage">addNewPage</button>
     </div>
+    <div>
+      <li v-for="page in pages">{{ page.createdDateTime }}</li>
+    </div>
     <LogoutScreen />
   </div>
 </template>
@@ -23,12 +26,14 @@ import {
   updateDoc,
   serverTimestamp,
   addDoc,
+  query,
+  getDocs,
+  where,
 } from "firebase/firestore";
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
 
 const props = defineProps({
   db: Firestore,
-  userUid: String,
 });
 const auth = getAuth();
 const user = auth.currentUser;
@@ -55,22 +60,31 @@ const getDocument = async () => {
     alert("No such document!");
   }
 };
+
+//既存ページ表示用
+const pages = ref([]);
+
+//新規ページ追加用
 const addPage = () => {
   //pagesコレクションに自動IDでページを追加
   addDoc(collection(props.db, "pages"), {
     name: "New Page",
     uid: user.uid,
-    createdDateTime: serverTimestamp()
-  }).then(()=>{
-    console.log("Created new page.")
-  }).catch((error) =>{
-    console.log(error.message)
+    createdDateTime: serverTimestamp(),
   })
-}
+    .then(() => {
+      console.log("Created new page.");
+      loadPages()
+    })
+    .catch((error) => {
+      console.log(error.message);
+    });
+    
+};
 
 //初回ログイン時、usersコレクションにユーザーを追加する
 onMounted(() => {
-  console.log("Checking for user data: " +user.uid);
+  console.log("Checking for user data: " + user.uid);
   const docRef = doc(props.db, "users", user.uid);
 
   getDoc(docRef)
@@ -80,11 +94,13 @@ onMounted(() => {
         //取得できればユーザーデータを更新する
         updateDoc(docRef, {
           loginDateTime: serverTimestamp(), //ログイン日時を更新する
-        }).then(() => {
-          console.log("Updated user data: loginDateTime.");
-        }).catch((error) =>{
-          console.log(error.message)
-        });
+        })
+          .then(() => {
+            console.log("Updated user data: loginDateTime.");
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
       } else {
         console.log("New user signed in.");
         //取得できなかった場合は初回ログインとして
@@ -93,15 +109,30 @@ onMounted(() => {
           email: user.email,
           createdDateTime: serverTimestamp(),
           loginDateTime: serverTimestamp(),
-        }).then(() => {
-          console.log("created user data.");
-        }).catch((error) =>{
-          console.log(error.message)
-        });
+        })
+          .then(() => {
+            console.log("created user data.");
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
       }
     })
     .catch((error) => {});
+
+  loadPages();
 });
+
+const loadPages = () => {
+  //pagesコレクションを読み取って配列変数に格納する
+  const pagesQuery = query(
+    collection(props.db, "pages"),
+    where("uid", "==", user.uid)
+  );
+  getDocs(pagesQuery).then((pagesDocs) => {
+    pages.value = pagesDocs.docs.map((pagedoc) => pagedoc.data());
+  });
+};
 </script>
 
 <style scoped></style>
