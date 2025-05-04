@@ -1,2 +1,40 @@
 @import url("google.css");
 @import "tailwindcss";
+
+.left {
+    @apply w-3xs 
+    bg-gray-100 
+    p-2 space-y-1 
+    h-screen 
+    text-base
+}
+.left-h1 {
+    @apply pl-3 pr-3 p-1 
+    rounded-sm 
+    font-bold text-gray-500 
+    grid grid-cols-2
+}
+
+.left-h2 {
+    @apply pl-3 pr-3 p-1 
+    rounded-sm 
+    font-bold text-xs text-gray-500 
+    grid grid-cols-2
+}
+.left-li {
+    @apply hover:bg-gray-200
+    pl-3 pr-3 p-1
+    rounded-sm
+    grid grid-cols-2
+    cursor-pointer
+    transition duration-200 ease-in-out;
+}
+
+.left-btn {
+    @apply hover:bg-gray-300
+    cursor-pointer
+    rounded-sm
+    justify-self-end
+    transition duration-200 ease-in-out
+    text-xs;
+}

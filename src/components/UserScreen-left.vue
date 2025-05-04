@@ -1,14 +1,14 @@
 <template>
-  <div class="w-3xs bg-gray-100 p-2 space-y-1 h-screen text-base">
-    <div class="pl-3 pr-3 p-1 rounded-sm font-bold text-gray-500 grid grid-cols-2">
-        Your Book<button class="hover:bg-gray-300 cursor-pointer rounded-sm justify-self-end transition duration-200 ease-in-out" >...</button>
+  <div class="left">
+    <div class="left-h1">
+        Your Book<button class="left-btn" >...</button>
     </div>
-    <div class="pl-3 pr-3 p-1 rounded-sm font-bold text-xs text-gray-500 grid grid-cols-2">
-        Pages<button class="hover:bg-gray-300 cursor-pointer rounded-sm justify-self-end transition duration-200 ease-in-out" @click="addPage">+</button>
+    <div class="left-h2">
+        Pages<button class="left-btn" @click="addPage">+</button>
     </div>
-    <li v-for="page in pages" class="hover:bg-gray-200 pl-3 pr-3 p-1 rounded-sm grid grid-cols-2 cursor-pointer transition duration-200 ease-in-out">
+    <li v-for="page in pages" class="left-li">
       {{ page.data.name
-      }}<button class="hover:bg-gray-300 cursor-pointer rounded-sm justify-self-end text-xs transition duration-200 ease-in-out" @click="deletePage(page.id)">
+      }}<button class="left-btn" @click="deletePage(page.id)">
         Delete
       </button>
     </li>
