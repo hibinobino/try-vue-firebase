@@ -6,17 +6,21 @@
     <div class="left-h2">
         Pages<button class="left-btn" @click="addPage">+</button>
     </div>
+    <!--
     <li v-for="page in pages" class="left-li">
       {{ page.data.name
       }}<button class="left-btn" @click="deletePage(page.id)">
         Delete
       </button>
-    </li>
+    </li>-->
+    <!--ページの数だけ項目を表示する-->
+    <PageList @delete-page="deletePage" :pages="pages" />
     <LogoutScreen />
   </div>
 </template>
 <script setup>
 import LogoutScreen from "./LogoutScreen.vue";
+import PageList from "./Left/PageList.vue";
 import { getAuth } from "firebase/auth";
 import {
   collection,
