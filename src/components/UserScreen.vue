@@ -1,31 +1,32 @@
 <template>
   <div>
-    <!--
-    <button @click="addDocument">addDocument</button>
-    <button @click="getDocument">getDocument</button>
-    <div>
-      <button @click="addPage">addNewPage</button>
-    </div>
-    <div>
-    </div>-->
     <div class="flex bg-violet-100">
-    <UserScreenL  :db="db"/>
+      <div class="left">
+    <!--ヘッダー-->
+    <LeftHeader />
+    <!--ページ一覧ヘッダー-->
+    <PageListHeader @add-page="addPage" />
+    <!--ページ一覧-->
+    <PageList @delete-page="deletePage" @open-page="openPage" :pages="pages" />
+    <LogoutScreen />
+  </div>
     <UserScreenR />
     </div>
   </div>
 </template>
 
 <script setup>
-import UserScreenL from "./UserScreen-left.vue";
+import LogoutScreen from "./LogoutScreen.vue";
 import UserScreenR from "./UserScreen-right.vue";
-
+import PageList from "./Left/PageList.vue";
+import PageListHeader from "./Left/PageListHeader.vue";
+import LeftHeader from "./Left/LeftHeader.vue";
 import { getAuth } from "firebase/auth";
 import {
   collection,
   doc,
   Firestore,
   setDoc,
-  Timestamp,
   getDoc,
   updateDoc,
   serverTimestamp,
@@ -34,6 +35,7 @@ import {
   getDocs,
   where,
   deleteDoc,
+  orderBy,
 } from "firebase/firestore";
 import { ref, onMounted } from "vue";
 
@@ -43,49 +45,35 @@ const props = defineProps({
 const auth = getAuth();
 const user = auth.currentUser;
 
-// Add a new document in collection "cities"
-const addDocument = () => {
-  const col = collection(props.db, "test-collection");
-  setDoc(doc(col, "test-doc"), {
-    name: "商品名",
-  })
-    .then(() => {
-      alert("書き込み成功！");
-    })
-    .catch((error) => {
-      alert("書き込みエラー");
-    });
-};
-const getDocument = async () => {
-  const docSnap = await getDoc(doc(props.db, "test-collection", "test-doc"));
-  if (docSnap.exists()) {
-    alert("Document data:", docSnap.data());
-  } else {
-    // docSnap.data() will be undefined in this case
-    alert("No such document!");
-  }
-};
-
 //既存ページ表示用
 const pages = ref([]);
 
 //新規ページ追加用
 const addPage = () => {
-  //pagesコレクションに自動IDでページを追加
-  addDoc(collection(props.db, "pages"), {
-    name: "New Page",
-    uid: user.uid,
-    createdDateTime: serverTimestamp(),
-  })
-    .then(() => {
-      console.log("Created new page.");
-      loadPages();
+  const strName = window.prompt("ページタイトルを入力してください。", "New Page");
+  if (strName != null) {
+    //pagesコレクションに自動IDでページを追加
+    addDoc(collection(props.db, "pages"), {
+      name: strName,
+      uid: user.uid,
+      createdDateTime: serverTimestamp(),
     })
-    .catch((error) => {
-      console.log(error.message);
-    });
+      .then(() => {
+        console.log("Created new page.");
+        loadPages();
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  }
 };
 
+//ページを開く
+const openPage = (pageId) => {
+  alert("Open " + pageId);
+};
+
+//ページを削除
 const deletePage = (pageId) => {
   deleteDoc(doc(props.db, "pages", pageId))
     .then(() => {
@@ -141,15 +129,18 @@ const loadPages = () => {
   //pagesコレクションを読み取って配列変数に格納する
   const pagesQuery = query(
     collection(props.db, "pages"),
-    where("uid", "==", user.uid)
+    where("uid", "==", user.uid),
+    orderBy("createdDateTime","desc")
   );
   getDocs(pagesQuery).then((pagesDocs) => {
     pages.value = pagesDocs.docs.map((pagedoc) => ({
       id: pagedoc.id,
       data: pagedoc.data(),
     }));
+
   });
 };
 </script>
+
 
 <style scoped></style>

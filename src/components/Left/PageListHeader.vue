@@ -15,8 +15,6 @@ const emits = defineEmits(["add-page"]);
 
 //追加ボタン
 const clickAddPage = () => {
-  const name = window.prompt("ページタイトルを入力してください。","New Page")
-  emits("add-page", name);
+  emits("add-page");
 };
-
 </script>
