@@ -1,24 +1,22 @@
 <template>
-  <div>
-    <!--
-    <button @click="addDocument">addDocument</button>
-    <button @click="getDocument">getDocument</button>
-    <div>
-      <button @click="addPage">addNewPage</button>
+  <div class="w-3xs bg-gray-100 p-2 space-y-1 h-screen text-base">
+    <div class="pl-3 pr-3 p-1 rounded-sm font-bold text-gray-500 grid grid-cols-2">
+        Your Book<button class="hover:bg-gray-300 cursor-pointer rounded-sm justify-self-end transition duration-200 ease-in-out" >...</button>
     </div>
-    <div>
-    </div>-->
-    <div class="flex bg-violet-100">
-    <UserScreenL  :db="db"/>
-    <UserScreenR />
+    <div class="pl-3 pr-3 p-1 rounded-sm font-bold text-xs text-gray-500 grid grid-cols-2">
+        Pages<button class="hover:bg-gray-300 cursor-pointer rounded-sm justify-self-end transition duration-200 ease-in-out" @click="addPage">+</button>
     </div>
+    <li v-for="page in pages" class="hover:bg-gray-200 pl-3 pr-3 p-1 rounded-sm grid grid-cols-2 cursor-pointer transition duration-200 ease-in-out">
+      {{ page.data.name
+      }}<button class="hover:bg-gray-300 cursor-pointer rounded-sm justify-self-end text-xs transition duration-200 ease-in-out" @click="deletePage(page.id)">
+        Delete
+      </button>
+    </li>
+    <LogoutScreen />
   </div>
 </template>
-
 <script setup>
-import UserScreenL from "./UserScreen-left.vue";
-import UserScreenR from "./UserScreen-right.vue";
-
+import LogoutScreen from "./LogoutScreen.vue";
 import { getAuth } from "firebase/auth";
 import {
   collection,
@@ -151,5 +149,3 @@ const loadPages = () => {
   });
 };
 </script>
-
-<style scoped></style>
