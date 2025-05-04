@@ -1,33 +1,25 @@
 <template>
   <div class="left">
-    <div class="left-h1">
-        Your Book<button class="left-btn" >...</button>
-    </div>
-    <div class="left-h2">
-        Pages<button class="left-btn" @click="addPage">+</button>
-    </div>
-    <!--
-    <li v-for="page in pages" class="left-li">
-      {{ page.data.name
-      }}<button class="left-btn" @click="deletePage(page.id)">
-        Delete
-      </button>
-    </li>-->
-    <!--ページの数だけ項目を表示する-->
-    <PageList @delete-page="deletePage" :pages="pages" />
+    <!--ヘッダー-->
+    <LeftHeader />
+    <!--ページ一覧ヘッダー-->
+    <PageListHeader @add-page="addPage"/>
+    <!--ページ一覧-->
+    <PageList @delete-page="deletePage" @open-page="openPage" :pages="pages" />
     <LogoutScreen />
   </div>
 </template>
 <script setup>
 import LogoutScreen from "./LogoutScreen.vue";
 import PageList from "./Left/PageList.vue";
+import PageListHeader from "./Left/PageListHeader.vue";
+import LeftHeader from "./Left/LeftHeader.vue";
 import { getAuth } from "firebase/auth";
 import {
   collection,
   doc,
   Firestore,
   setDoc,
-  Timestamp,
   getDoc,
   updateDoc,
   serverTimestamp,
@@ -45,37 +37,14 @@ const props = defineProps({
 const auth = getAuth();
 const user = auth.currentUser;
 
-// Add a new document in collection "cities"
-const addDocument = () => {
-  const col = collection(props.db, "test-collection");
-  setDoc(doc(col, "test-doc"), {
-    name: "商品名",
-  })
-    .then(() => {
-      alert("書き込み成功！");
-    })
-    .catch((error) => {
-      alert("書き込みエラー");
-    });
-};
-const getDocument = async () => {
-  const docSnap = await getDoc(doc(props.db, "test-collection", "test-doc"));
-  if (docSnap.exists()) {
-    alert("Document data:", docSnap.data());
-  } else {
-    // docSnap.data() will be undefined in this case
-    alert("No such document!");
-  }
-};
-
 //既存ページ表示用
 const pages = ref([]);
 
 //新規ページ追加用
-const addPage = () => {
+const addPage = (strName) => {
   //pagesコレクションに自動IDでページを追加
   addDoc(collection(props.db, "pages"), {
-    name: "New Page",
+    name: strName,
     uid: user.uid,
     createdDateTime: serverTimestamp(),
   })
@@ -88,6 +57,12 @@ const addPage = () => {
     });
 };
 
+//ページを開く
+const openPage = (pageId) => {
+  alert("Open " + pageId);
+};
+
+//ページを削除
 const deletePage = (pageId) => {
   deleteDoc(doc(props.db, "pages", pageId))
     .then(() => {
