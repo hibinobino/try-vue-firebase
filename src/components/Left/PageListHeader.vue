@@ -1,6 +1,6 @@
 <template>
-  <div class="left-h2">
-      Pages<button class="left-btn" @click="clickAddPage">+</button>
+  <div class="left-header text-xs">
+      <div class="flex-grow">Pages</div><button class="left-btn" @click="clickAddPage">+</button>
   </div>
 </template>
 

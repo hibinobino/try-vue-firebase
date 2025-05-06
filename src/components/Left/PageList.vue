@@ -1,6 +1,6 @@
 <template>
-  <li class="page-list-item" v-for="page in pages">
-    <div @click="clickOpenPage(page.id)">{{ page.data.name }}</div>
+  <li class="left-item" v-for="page in pages">
+    <div class="flex-grow" @click="clickOpenPage(page.id)">📝 {{ page.data.name }}</div>
     <button class="left-btn" @click="clickDeletePage(page.id)">Delete</button>
   </li>
 </template>

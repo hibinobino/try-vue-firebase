@@ -3,33 +3,43 @@
 @import url("google.css");
 @import "tailwindcss";
 
-
-.left {
-    @apply w-3xs 
-    bg-gray-100 
+.section{
+    @apply 
     p-2 space-y-1 
+    w-3xs 
     h-screen 
     text-base
+    flex flex-col
 }
-.left-h1 {
+.left {
+    @apply bg-gray-100 
+}
+.right{
+    @apply flex-grow
+    p-10
+}
+.left-header {
     @apply pl-3 pr-3 p-1 
     rounded-sm 
     font-bold text-gray-500 
-    grid grid-cols-2
+    flex flex-row
 }
 
-.left-h2 {
-    @apply pl-3 pr-3 p-1 
-    rounded-sm 
-    font-bold text-xs text-gray-500 
-    grid grid-cols-2
-}
-.page-list-item {
+.left-item {
     @apply hover:bg-gray-200
     pl-3 pr-3 p-1
     rounded-sm
-    grid grid-cols-2
+    flex flex-row
     cursor-pointer
+    transition duration-200 ease-in-out;
+}
+.left-item2 {
+    @apply hover:bg-gray-300
+    bg-gray-200
+    pl-3 pr-3 p-1
+    rounded-sm
+    cursor-pointer
+    text-center
     transition duration-200 ease-in-out;
 }
 

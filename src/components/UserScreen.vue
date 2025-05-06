@@ -1,27 +1,33 @@
 <template>
   <div>
-    <div class="flex bg-violet-100">
-      <div class="left">
-    <!--ヘッダー-->
-    <LeftHeader />
-    <!--ページ一覧ヘッダー-->
-    <PageListHeader @add-page="addPage" />
-    <!--ページ一覧-->
-    <PageList @delete-page="deletePage" @open-page="openPage" :pages="pages" />
-    <LogoutScreen />
-  </div>
-    <UserScreenR />
+    <div class="flex flex-row">
+      <div class="left section">
+        <div class="flex-grow">
+          <LeftHeader />
+          <PageListHeader @add-page="addPage" />
+          <PageList
+            @delete-page="deletePage"
+            @open-page="openPage"
+            :pages="pages"
+          />
+        </div>
+
+        <div>
+          <div class="left-item2" @click="googleLogout">Logout</div>
+        </div>
+      </div>
+      <div class="right section">
+        <input type="text" class="focus:outline-none focus:ring-0 text-4xl font-bold h-12 selection:bg-blue-200"/>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import LogoutScreen from "./LogoutScreen.vue";
-import UserScreenR from "./UserScreen-right.vue";
 import PageList from "./Left/PageList.vue";
 import PageListHeader from "./Left/PageListHeader.vue";
 import LeftHeader from "./Left/LeftHeader.vue";
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import {
   collection,
   doc,
@@ -50,7 +56,10 @@ const pages = ref([]);
 
 //新規ページ追加用
 const addPage = () => {
-  const strName = window.prompt("ページタイトルを入力してください。", "New Page");
+  const strName = window.prompt(
+    "ページタイトルを入力してください。",
+    "New Page"
+  );
   if (strName != null) {
     //pagesコレクションに自動IDでページを追加
     addDoc(collection(props.db, "pages"), {
@@ -130,17 +139,25 @@ const loadPages = () => {
   const pagesQuery = query(
     collection(props.db, "pages"),
     where("uid", "==", user.uid),
-    orderBy("createdDateTime","desc")
+    orderBy("createdDateTime", "desc")
   );
   getDocs(pagesQuery).then((pagesDocs) => {
     pages.value = pagesDocs.docs.map((pagedoc) => ({
       id: pagedoc.id,
       data: pagedoc.data(),
     }));
-
   });
 };
+const googleLogout = () => {
+  signOut(auth)
+    .then(() => {
+      console.log("Signed out successfully.");
+      // Sign-out successful.
+    })
+    .catch((error) => {
+      // An error happened.
+    });
+};
 </script>
-
 
 <style scoped></style>
