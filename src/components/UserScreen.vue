@@ -16,14 +16,13 @@
           <div class="left-item2" @click="googleLogout">Logout</div>
         </div>
       </div>
-      <div class="right section">
-        <input type="text" class="focus:outline-none focus:ring-0 text-4xl font-bold h-12 selection:bg-blue-200"/>
-      </div>
+      <PageContent />
     </div>
   </div>
 </template>
 
 <script setup>
+import PageContent from "./Right/PageContent.vue";
 import PageList from "./Left/PageList.vue";
 import PageListHeader from "./Left/PageListHeader.vue";
 import LeftHeader from "./Left/LeftHeader.vue";
