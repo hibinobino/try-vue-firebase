@@ -65,6 +65,7 @@ const addPage = () => {
       name: strName,
       uid: user.uid,
       createdDateTime: serverTimestamp(),
+      mdContent: ""
     })
       .then(() => {
         console.log("Created new page.");

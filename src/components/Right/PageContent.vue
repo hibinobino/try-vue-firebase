@@ -11,11 +11,7 @@
     <div>Updated: 2025-01-01 12:00</div>
     </div>
     
-    <input
-      type="text"
-      class="focus:outline-none focus:ring-0 font-bold selection:bg-blue-200"
-      v-model="name"
-    />
+    <div v-html="mdHTML"></div>
     <input
       type="text"
       class="focus:outline-none focus:ring-0 font-bold selection:bg-blue-200"
@@ -30,8 +26,14 @@
 </template>
 
 <script setup>
+import { Marked } from 'marked';
 import { ref } from 'vue';
 
 const name = ref("New Page")
+const mdContent = ref("## Markup text here.")
+
+const mdParser = new Marked()
+const mdHTML = ref(mdParser.parse("## Title Text"))
+
 
 </script>
