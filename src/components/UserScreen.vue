@@ -16,7 +16,10 @@
           <div class="left-item2" @click="googleLogout">Logout</div>
         </div>
       </div>
-      <PageContent />
+      <PageContent
+        :pageData="selectedPageData"
+        @save-page="savePage"
+      />
     </div>
   </div>
 </template>
@@ -53,6 +56,13 @@ const user = auth.currentUser;
 //既存ページ表示用
 const pages = ref([]);
 
+//現在のページの内容をオブジェクトにする
+const selectedPageData =ref({
+  pageId: "",
+  name: "",
+  mdContent: ""
+})
+
 //新規ページ追加用
 const addPage = () => {
   const strName = window.prompt(
@@ -65,7 +75,7 @@ const addPage = () => {
       name: strName,
       uid: user.uid,
       createdDateTime: serverTimestamp(),
-      mdContent: ""
+      mdContent: "## Header 2/n/n- Test List  /nNext Line",
     })
       .then(() => {
         console.log("Created new page.");
@@ -79,7 +89,23 @@ const addPage = () => {
 
 //ページを開く
 const openPage = (pageId) => {
-  alert("Open " + pageId);
+  //ドキュメントを取得してmdContentを右ページに渡す
+  getDoc(doc(props.db, "pages", pageId))
+    .then((doc) => {
+      //alert(doc.data().mdContent);
+      //selectName.value = doc.data().name;
+      //selectMdContent.value = doc.data().mdContent;
+
+      selectedPageData.value ={
+        id: pageId,
+        name: doc.data().name,
+        mdContent: doc.data().mdContent
+      }
+    })
+    .catch((e) => {
+      //失敗したらメッセージ表示
+      alert("読み込みに失敗しました。" + e);
+    });
 };
 
 //ページを削除
@@ -157,6 +183,19 @@ const googleLogout = () => {
     .catch((error) => {
       // An error happened.
     });
+};
+
+//ページ内容を書き込む
+const savePage = (pageId, editName, editMdContent) => {
+  const targetPage = doc(props.db, "pages", pageId);
+
+  updateDoc(targetPage, {
+    name: editName,
+    mdContent: editMdContent,
+    updatedDateTime: serverTimestamp()
+  }).catch((e) => {
+    alert("Failed to save page. Changes are discarded.");
+  });
 };
 </script>
 
