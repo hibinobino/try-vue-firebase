@@ -27,11 +27,11 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
 const auth = getAuth();
 
 //ログイン状態を確認
 onAuthStateChanged(auth, (user) => {
-  //console.log("checkAuthState: " + user);
   if (user) {
     userUid.value = user.uid;
     isLoggedIn.value = true;

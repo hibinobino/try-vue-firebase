@@ -5,7 +5,11 @@
 </template>
 
 <script setup>
+import { Firestore } from 'firebase/firestore';
 
+const props = defineProps({
+  db: Firestore
+})
 //コンポーネントイベントを定義する
 const emits = defineEmits(["add-page"]);
 

@@ -4,8 +4,7 @@
       <div class="left section">
         <div class="flex-grow">
           <LeftHeader />
-          <PageListHeader @add-page="addPage" />
-          <PageList
+          <PageListSection
             @delete-page="deletePage"
             @open-page="openPage"
             :pages="pages"
@@ -26,8 +25,7 @@
 
 <script setup>
 import PageContent from "./Right/PageContent.vue";
-import PageList from "./Left/PageList.vue";
-import PageListHeader from "./Left/PageListHeader.vue";
+import PageListSection from "./Left/PageListSection.vue";
 import LeftHeader from "./Left/LeftHeader.vue";
 import { getAuth, signOut } from "firebase/auth";
 import {

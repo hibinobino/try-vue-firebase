@@ -1,11 +1,13 @@
 <template>
-  <li class="left-item" v-for="page in pages">
-    <div class="flex-grow" @click="clickOpenPage(page.id)">📝 {{ page.data.name }}</div>
-    <button class="left-btn" @click="clickDeletePage(page.id)">Delete</button>
-  </li>
+  <PageListHeader :db="db"/>
+  <ul>
+    <PageListItems v-for="page in pages" :page="page" />
+  </ul>
 </template>
 
 <script setup>
+import PageListHeader from "./PageListSection-Header.vue";
+import PageListItems from "./PageListSection-Items.vue";
 import { QueryDocumentSnapshot } from "firebase/firestore";
 
 //ページ情報を受信する
@@ -14,7 +16,7 @@ const props = defineProps({
 });
 
 //コンポーネントイベントを定義する
-const emits = defineEmits(["delete-page","open-page"]);
+const emits = defineEmits(["delete-page", "open-page"]);
 
 //--------------------------------------
 //ボタンを押したら親に通知する
@@ -27,6 +29,6 @@ const clickDeletePage = (pageId) => {
 
 //ページボタン
 const clickOpenPage = (pageId) => {
-  emits("open-page", pageId)
-}
+  emits("open-page", pageId);
+};
 </script>
