@@ -5,9 +5,7 @@
         <div class="flex-grow">
           <LeftHeader />
           <PageListSection
-            @delete-page="deletePage"
-            @open-page="openPage"
-            :pages="pages"
+            :db="db"
           />
         </div>
 
@@ -29,19 +27,12 @@ import PageListSection from "./Left/PageListSection.vue";
 import LeftHeader from "./Left/LeftHeader.vue";
 import { getAuth, signOut } from "firebase/auth";
 import {
-  collection,
   doc,
   Firestore,
   setDoc,
   getDoc,
   updateDoc,
   serverTimestamp,
-  addDoc,
-  query,
-  getDocs,
-  where,
-  deleteDoc,
-  orderBy,
 } from "firebase/firestore";
 import { ref, onMounted } from "vue";
 
@@ -121,8 +112,6 @@ onMounted(() => {
       }
     })
     .catch((error) => {});
-
-  loadPages();
 });
 
 const googleLogout = () => {

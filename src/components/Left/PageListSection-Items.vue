@@ -1,12 +1,17 @@
 <template>
-  <li class="left-item">
-    <div class="flex-grow" @click="loadPage">📝 {{ page.data.name }}</div>
-    <button class="left-btn" @click="deletePage">Delete</button>
-  </li>
+  <ul>
+    <li class="left-item" v-for="page in pages">
+      <div class="flex-grow" @click="loadPage(page)">
+        📝 {{ page.data().name }}
+      </div>
+      <button class="left-btn" @click="deletePage(page)">Delete</button>
+    </li>
+  </ul>
 </template>
 
 <script setup>
 import {
+  deleteDoc,
   doc,
   Firestore,
   getDoc,
@@ -16,31 +21,32 @@ import {
 //ページ情報を受信する
 const props = defineProps({
   db: Firestore,
-  page: QueryDocumentSnapshot,
+  pages: Array < QueryDocumentSnapshot > [],
 });
 
 //ページを削除したら報告する
-const emits = defineEmits(["deleted-page", "loaded-page"]);
+const emits = defineEmits(["deleted-page","select-page"]);
 
 //ページを削除
-const deletePage = () => {
-  deleteDoc(doc(props.db, "pages", props.page.id))
+const deletePage = (pageSnap) => {
+  deleteDoc(doc(props.db, "pages", pageSnap.id))
     .then(() => {
       //削除したページIDを報告する
-      emits("deleted-page", props.page.id);
+      console.log("deleted " + pageSnap.id);
+      emits("deleted-page", pageSnap.id);
     })
     .catch((error) => {
       console.log(error.message);
     });
 };
 
-const loadPage = () => {
+const loadPage = (pageSnap) => {
   //クリックしたページのデータを取得
-  const targetDoc = doc(db, "pages", props.page.id);
+  const targetDoc = doc(props.db, "pages", pageSnap.id);
   getDoc(targetDoc)
     .then((targetSnap) => {
-      //取得したデータを親に報告する
-      emits("loaded-page", targetDoc);
+      //取得したデータを親に通知する
+      emits("select-page", targetSnap);
     })
     .catch((e) => {
       alert("Failed to load page.");

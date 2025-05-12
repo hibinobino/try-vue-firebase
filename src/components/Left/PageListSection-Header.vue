@@ -6,7 +6,8 @@
 </template>
 
 <script setup>
-import { Firestore, addDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { Firestore, addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 //Firestore情報を引き継ぐ
 const props = defineProps({
@@ -15,6 +16,8 @@ const props = defineProps({
 
 //ページの追加完了を報告する
 const emits = defineEmits(["added-new-page"])
+
+const user = getAuth().currentUser
 
 //新規ページ追加
 const addPage = () => {

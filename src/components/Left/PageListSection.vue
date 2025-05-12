@@ -1,17 +1,10 @@
 <template>
-  <PageListHeader :db="db" @added-new-page="loadPageItems" />
-  <ul>
-    <PageListItems
-      v-for="pageItem in pageItems"
-      :page="pageItem"
-      :db="db"
-      @deleted-page:="loadPageItems"
-      @loaded-page=""
-    />
-  </ul>
+  <PageListHeader :db="db" @added-new-page="loadPageItems"/>
+  <PageListItems :db="db" :pages="pageItems" @deleted-page="loadPageItems" @select-page="loadPageItems" />
 </template>
 
 <script setup>
+import { onMounted, ref } from "vue";
 import PageListHeader from "./PageListSection-Header.vue";
 import PageListItems from "./PageListSection-Items.vue";
 import {
@@ -23,16 +16,21 @@ import {
   QueryDocumentSnapshot,
   where,
 } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 //ページ情報を受信する
 const props = defineProps({
   db: Firestore,
 });
 
-const pageItems = Ref(Array<QueryDocumentSnapshot>[])
+const emits = defineEmits([""])
+
+const pageItems = ref(Array < QueryDocumentSnapshot > []);
+const user = getAuth().currentUser;
 
 //ページ一覧を取得する
 const loadPageItems = () => {
+  console.log("Loadin page list");
   //クエリでページを絞り込んで取得する
   const pagesQuery = query(
     collection(props.db, "pages"),
@@ -41,7 +39,19 @@ const loadPageItems = () => {
   );
   //絞り込んだページを取得
   getDocs(pagesQuery).then((pagesSnap) => {
-    pageItems.value = pagesSnap.docs
+    pageItems.value = pagesSnap.docs;
   });
 };
+
+//起動時にページ一覧を読み込み
+onMounted(() => {
+  console.log("mounted!");
+  loadPageItems();
+});
+
+//読み込んだページを親に渡す
+const openPage =(pageSnap)=>{
+
+}
+
 </script>
