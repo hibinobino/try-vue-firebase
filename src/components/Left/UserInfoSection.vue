@@ -17,6 +17,9 @@ import {
 } from "firebase/firestore";
 import { ref, onMounted, render } from "vue";
 
+const props=defineProps({
+  db: Firestore
+})
 //ユーザー情報を取得
 const user = getAuth().currentUser
 
