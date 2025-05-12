@@ -11,7 +11,7 @@
         </div>
 
         <div>
-          <div class="left-item2" @click="googleLogout">Logout</div>
+          <LogoutSection />
         </div>
       </div>
       <PageContent
@@ -26,6 +26,7 @@
 import PageContent from "./Right/PageContent.vue";
 import PageListSection from "./Left/PageListSection.vue";
 import LeftHeader from "./Left/LeftHeader.vue";
+import LogoutSection from "./Left/LogoutSection.vue";
 import { getAuth, signOut } from "firebase/auth";
 import {
   doc,
@@ -89,16 +90,7 @@ onMounted(() => {
     .catch((error) => {});
 });
 
-const googleLogout = () => {
-  signOut(auth)
-    .then(() => {
-      console.log("Signed out successfully.");
-      // Sign-out successful.
-    })
-    .catch((error) => {
-      // An error happened.
-    });
-};
+
 
 //ページ内容を書き込む
 const savePage = (pageId, editName, editMdContent) => {
