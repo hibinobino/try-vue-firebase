@@ -83,16 +83,6 @@ const openPage = (pageId) => {
     });
 };
 
-//ページを削除
-const deletePage = (pageId) => {
-  deleteDoc(doc(props.db, "pages", pageId))
-    .then(() => {
-      loadPages();
-    })
-    .catch((error) => {
-      console.log(error.message);
-    });
-};
 
 //初回ログイン時、usersコレクションにユーザーを追加する
 onMounted(() => {
