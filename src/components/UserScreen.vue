@@ -6,6 +6,7 @@
           <LeftHeader />
           <PageListSection
             :db="db"
+            @notify-open-page-id="setCurrentPageId"
           />
         </div>
 
@@ -34,7 +35,7 @@ import {
   updateDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, render } from "vue";
 
 const props = defineProps({
   db: Firestore,
@@ -42,38 +43,12 @@ const props = defineProps({
 const auth = getAuth();
 const user = auth.currentUser;
 
-//既存ページ表示用
-const pages = ref([]);
+//閲覧中のページIDを格納
+const currentPageId =ref("")
 
-//現在のページの内容をオブジェクトにする
-const selectedPageData =ref({
-  pageId: "",
-  name: "",
-  mdContent: ""
-})
-
-
-//ページを開く
-const openPage = (pageId) => {
-  //ドキュメントを取得してmdContentを右ページに渡す
-  getDoc(doc(props.db, "pages", pageId))
-    .then((doc) => {
-      //alert(doc.data().mdContent);
-      //selectName.value = doc.data().name;
-      //selectMdContent.value = doc.data().mdContent;
-
-      selectedPageData.value ={
-        id: pageId,
-        name: doc.data().name,
-        mdContent: doc.data().mdContent
-      }
-    })
-    .catch((e) => {
-      //失敗したらメッセージ表示
-      alert("読み込みに失敗しました。" + e);
-    });
-};
-
+const setCurrentPageId = (pageId) =>{
+  currentPageId.value=pageId
+}
 
 //初回ログイン時、usersコレクションにユーザーを追加する
 onMounted(() => {
