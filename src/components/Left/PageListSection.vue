@@ -1,6 +1,11 @@
 <template>
-  <PageListHeader :db="db" @added-new-page="loadPageItems"/>
-  <PageListItems :db="db" :pages="pageItems" @deleted-page="loadPageItems" @select-page="loadPageItems" />
+  <PageListHeader :db="db" @added-new-page="loadPageItems" />
+  <PageListItems
+    :db="db"
+    :pages="pageItems"
+    @deleted-page="loadPageItems"
+    @select-page="loadPageItems"
+  />
 </template>
 
 <script setup>
@@ -23,7 +28,7 @@ const props = defineProps({
   db: Firestore,
 });
 
-const emits = defineEmits([""])
+const emits = defineEmits(["notify-open-page-id"]);
 
 const pageItems = ref(Array < QueryDocumentSnapshot > []);
 const user = getAuth().currentUser;
@@ -49,9 +54,8 @@ onMounted(() => {
   loadPageItems();
 });
 
-//読み込んだページを親に渡す
-const openPage =(pageSnap)=>{
-
-}
-
+//開きたいページのIDを通知する
+const notifyPageId = (pageId) => {
+  emits("notify-open-page-id", pageId);
+};
 </script>

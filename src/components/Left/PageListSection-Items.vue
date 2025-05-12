@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li class="left-item" v-for="page in pages">
-      <div class="flex-grow" @click="loadPage(page)">
+      <div class="flex-grow" @click="loadPage(page.id)">
         📝 {{ page.data().name }}
       </div>
       <button class="left-btn" @click="deletePage(page)">Delete</button>
@@ -40,16 +40,8 @@ const deletePage = (pageSnap) => {
     });
 };
 
-const loadPage = (pageSnap) => {
-  //クリックしたページのデータを取得
-  const targetDoc = doc(props.db, "pages", pageSnap.id);
-  getDoc(targetDoc)
-    .then((targetSnap) => {
-      //取得したデータを親に通知する
-      emits("select-page", targetSnap);
-    })
-    .catch((e) => {
-      alert("Failed to load page.");
-    });
+const loadPage = (pageId) => {
+    //表示したいページのIDを通知する
+    emits("select-page", pageId);
 };
 </script>
