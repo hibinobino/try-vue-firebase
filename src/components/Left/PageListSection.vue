@@ -4,7 +4,7 @@
     :db="db"
     :pages="pageItems"
     @deleted-page="loadPageItems"
-    @select-page="loadPageItems"
+    @select-page="openPageId"
   />
 </template>
 
@@ -28,14 +28,14 @@ const props = defineProps({
   db: Firestore,
 });
 
-const emits = defineEmits(["notify-open-page-id"]);
+const emits = defineEmits(["open-page-id"]);
 
 const pageItems = ref(Array < QueryDocumentSnapshot > []);
 const user = getAuth().currentUser;
 
 //ページ一覧を取得する
 const loadPageItems = () => {
-  console.log("Loadin page list");
+  console.log("Loading page list");
   //クエリでページを絞り込んで取得する
   const pagesQuery = query(
     collection(props.db, "pages"),
@@ -51,11 +51,12 @@ const loadPageItems = () => {
 //起動時にページ一覧を読み込み
 onMounted(() => {
   console.log("mounted!");
-  loadPageItems();
+  loadPageItems()
+  openPageId(pageItems.value[0])
 });
 
 //開きたいページのIDを通知する
-const notifyPageId = (pageId) => {
-  emits("notify-open-page-id", pageId);
+const openPageId = (pageId) => {
+  emits("open-page-id", pageId);
 };
 </script>

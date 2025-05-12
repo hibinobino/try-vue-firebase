@@ -3,12 +3,13 @@
     <div class="flex flex-row">
       <div class="left section">
         <div class="flex-grow">
-          <UserInfoSection />
-          <PageListSection :db="db" @notify-open-page-id="setCurrentPageId" />
+          <UserInfoSection :db="db"/>
+          
+          <PageListSection :db="db" @open-page-id="setCurrentPageId" />
         </div>
         <LogoutSection />
       </div>
-      <PageContent />
+      <PageContent :current-page-id="currentPageId" />
     </div>
   </div>
 </template>

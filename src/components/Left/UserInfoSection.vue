@@ -27,7 +27,7 @@ const user = getAuth().currentUser
 onMounted(() => {
   console.log("Checking for user data: " + user.uid);
   const docRef = doc(props.db, "users", user.uid);
-
+console.log("check")
   getDoc(docRef)
     .then((docSnap) => {
       if (docSnap.exists()) {

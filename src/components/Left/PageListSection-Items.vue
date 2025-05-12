@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li class="left-item" v-for="page in pages">
-      <div class="flex-grow" @click="loadPage(page.id)">
+      <div class="flex-grow" @click="selectPage(page.id)">
         📝 {{ page.data().name }}
       </div>
       <button class="left-btn" @click="deletePage(page)">Delete</button>
@@ -17,6 +17,7 @@ import {
   getDoc,
   QueryDocumentSnapshot,
 } from "firebase/firestore";
+import { onMounted } from "vue";
 
 //ページ情報を受信する
 const props = defineProps({
@@ -40,8 +41,12 @@ const deletePage = (pageSnap) => {
     });
 };
 
-const loadPage = (pageId) => {
+const selectPage = (pageId) => {
     //表示したいページのIDを通知する
     emits("select-page", pageId);
 };
+
+onMounted(()=>{
+  console.log("Mounted PageListSection-Items.vue")
+})
 </script>

@@ -8,6 +8,7 @@
 <script setup>
 import { getAuth } from "firebase/auth";
 import { Firestore, addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { onMounted } from "vue";
 
 //Firestore情報を引き継ぐ
 const props = defineProps({
@@ -44,4 +45,8 @@ const addPage = () => {
       });
   }
 };
+
+onMounted(()=>{
+  console.log("Mounted PageListSection-Header.vue")
+})
 </script>
