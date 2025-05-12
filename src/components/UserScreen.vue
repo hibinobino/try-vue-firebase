@@ -61,29 +61,6 @@ const selectedPageData =ref({
   mdContent: ""
 })
 
-//新規ページ追加用
-const addPage = () => {
-  const strName = window.prompt(
-    "ページタイトルを入力してください。",
-    "New Page"
-  );
-  if (strName != null) {
-    //pagesコレクションに自動IDでページを追加
-    addDoc(collection(props.db, "pages"), {
-      name: strName,
-      uid: user.uid,
-      createdDateTime: serverTimestamp(),
-      mdContent: "## Header 2/n/n- Test List  /nNext Line",
-    })
-      .then(() => {
-        console.log("Created new page.");
-        loadPages();
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  }
-};
 
 //ページを開く
 const openPage = (pageId) => {
