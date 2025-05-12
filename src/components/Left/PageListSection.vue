@@ -1,34 +1,24 @@
 <template>
-  <PageListHeader :db="db"/>
+  <PageListHeader :db="db" @added-new-page="" />
   <ul>
-    <PageListItems v-for="page in pages" :page="page" />
+    <PageListItems
+      v-for="page in pages"
+      :page="page"
+      :db="db"
+      @deleted-page:=""
+      @loaded-page=""
+    />
   </ul>
 </template>
 
 <script setup>
 import PageListHeader from "./PageListSection-Header.vue";
 import PageListItems from "./PageListSection-Items.vue";
-import { QueryDocumentSnapshot } from "firebase/firestore";
+import { Firestore, QueryDocumentSnapshot } from "firebase/firestore";
 
 //ページ情報を受信する
 const props = defineProps({
+  db: Firestore,
   pages: Array < QueryDocumentSnapshot > [],
 });
-
-//コンポーネントイベントを定義する
-const emits = defineEmits(["delete-page", "open-page"]);
-
-//--------------------------------------
-//ボタンを押したら親に通知する
-//--------------------------------------
-
-//削除ボタン
-const clickDeletePage = (pageId) => {
-  emits("delete-page", pageId);
-};
-
-//ページボタン
-const clickOpenPage = (pageId) => {
-  emits("open-page", pageId);
-};
 </script>
