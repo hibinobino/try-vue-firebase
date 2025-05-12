@@ -125,20 +125,6 @@ onMounted(() => {
   loadPages();
 });
 
-const loadPages = () => {
-  //pagesコレクションを読み取って配列変数に格納する
-  const pagesQuery = query(
-    collection(props.db, "pages"),
-    where("uid", "==", user.uid),
-    orderBy("createdDateTime", "desc")
-  );
-  getDocs(pagesQuery).then((pagesDocs) => {
-    pages.value = pagesDocs.docs.map((pagedoc) => ({
-      id: pagedoc.id,
-      data: pagedoc.data(),
-    }));
-  });
-};
 const googleLogout = () => {
   signOut(auth)
     .then(() => {
