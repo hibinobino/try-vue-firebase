@@ -9,7 +9,7 @@
         </div>
         <LogoutSection />
       </div>
-      <PageContent :current-page-id="currentPageId" />
+      <PageContent :current-page-id="currentPageId" :db="db"/>
     </div>
   </div>
 </template>
