@@ -1,6 +1,6 @@
 <template>
   <ul>
-    <li class="left-item" v-for="page in pages">
+    <li class="left-item" v-for="page in pageItems" v-bind:class="{'bg-gray-200': page.id==selectedPageId}">
       <div class="flex-grow" @click="selectPage(page.id)">
         📝 {{ page.data().name }}
       </div>
@@ -10,23 +10,47 @@
 </template>
 
 <script setup>
+import { getAuth } from "firebase/auth";
 import {
   deleteDoc,
   doc,
+  collection,
   Firestore,
-  getDoc,
+  getDocs,
+  orderBy,
+  query,
   QueryDocumentSnapshot,
+  where,
 } from "firebase/firestore";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
 //ページ情報を受信する
 const props = defineProps({
   db: Firestore,
-  pages: Array < QueryDocumentSnapshot > [],
 });
 
+const selectedPageId = ref("");
+
 //ページを削除したら報告する
-const emits = defineEmits(["deleted-page","select-page"]);
+const emits = defineEmits(["deleted-page", "select-page"]);
+
+const pageItems = ref(Array < QueryDocumentSnapshot > []);
+const user = getAuth().currentUser;
+
+//ページ一覧を取得する
+const loadPageItems = () => {
+  console.log("Loading page list");
+  //クエリでページを絞り込んで取得する
+  const pagesQuery = query(
+    collection(props.db, "pages"),
+    where("uid", "==", user.uid), //絞り込み条件、ログイン中のユーザーのものであること
+    orderBy("createdDateTime", "desc") //日付順に並び変え
+  );
+  //絞り込んだページを取得
+  getDocs(pagesQuery).then((pagesSnap) => {
+    pageItems.value = pagesSnap.docs;
+  });
+};
 
 //ページを削除
 const deletePage = (pageSnap) => {
@@ -42,11 +66,14 @@ const deletePage = (pageSnap) => {
 };
 
 const selectPage = (pageId) => {
-    //表示したいページのIDを通知する
-    emits("select-page", pageId);
+  //選択中のページのボタンの色を管理
+  selectedPageId.value = pageId;
+  //表示したいページのIDを通知する
+  emits("select-page", pageId);
 };
 
-onMounted(()=>{
-  console.log("Mounted PageListSection-Items.vue")
-})
+//起動時にページ一覧を読み込み
+onMounted(() => {
+  loadPageItems()
+});
 </script>

@@ -3,9 +3,15 @@
     <div class="flex flex-row">
       <div class="left section">
         <div class="flex-grow">
-          <UserInfoSection :db="db"/>
-          
-          <PageListSection :db="db" @open-page-id="setCurrentPageId" />
+          <UserInfoSection :db="db" />
+
+          <PageListHeader :db="db" @added-new-page="loadPageItems" />
+          <PageListItems
+            :db="db"
+            :pages="pageItems"
+            @deleted-page="loadPageItems"
+            @select-page="setCurrentPageId"
+          />
         </div>
         <LogoutSection />
       </div>
@@ -16,17 +22,13 @@
 
 <script setup>
 import PageContent from "./Right/PageContent.vue";
-import PageListSection from "./Left/PageListSection.vue";
+import PageListHeader from "./Left/PageListSection-Header.vue";
+import PageListItems from "./Left/PageListSection-Items.vue";
 import UserInfoSection from "./Left/UserInfoSection.vue";
 import LogoutSection from "./Left/LogoutSection.vue";
 import { getAuth, signOut } from "firebase/auth";
-import {
-  doc,
-  Firestore,
-  updateDoc,
-  serverTimestamp,
-} from "firebase/firestore";
-import { ref} from "vue";
+import { doc, Firestore, updateDoc, serverTimestamp } from "firebase/firestore";
+import { ref, watch } from "vue";
 
 const props = defineProps({
   db: Firestore,
@@ -42,18 +44,6 @@ const setCurrentPageId = (pageId) => {
 };
 
 
-//ページ内容を書き込む
-const savePage = (pageId, editName, editMdContent) => {
-  const targetPage = doc(props.db, "pages", pageId);
-
-  updateDoc(targetPage, {
-    name: editName,
-    mdContent: editMdContent,
-    updatedDateTime: serverTimestamp(),
-  }).catch((e) => {
-    alert("Failed to save page. Changes are discarded.");
-  });
-};
 </script>
 
 <style scoped></style>
