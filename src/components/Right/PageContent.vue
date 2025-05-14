@@ -11,7 +11,15 @@
       <div>Created: 2025-01-01 12:00</div>
       <div>Updated: 2025-01-01 12:00</div>
     </div>
-    <div>{{ mdParser.parse(mdContent) }}</div>
+    <div
+      v-html="mdParser.parse(mdContent)"
+      contenteditable="true"
+      class="focus:outline-none focus:ring-0"
+    ></div><div
+      v-html="mdParser.parse('# This is an H1\n\n## This is an H2\n\n###### This is an H6')"
+      contenteditable="true"
+      class="focus:outline-none focus:ring-0"
+    ></div>
   </div>
 </template>
 
@@ -33,8 +41,8 @@ const currentPageId = ref();
 //ページデータを格納する
 const pageData = ref(DocumentSnapshot);
 
-const mdContent = ref("")
-const name =ref("")
+const mdContent = ref("");
+const name = ref("");
 
 //mdContentをMarkDownに変換する用
 const mdParser = new Marked();
@@ -46,8 +54,8 @@ const loadPageData = (pageId) => {
 
   getDoc(docRef)
     .then((docSnap) => {
-      mdContent.value=docSnap.data().mdContent
-      name.value=docSnap.data().name
+      mdContent.value = docSnap.data().mdContent;
+      name.value = docSnap.data().name;
       console.log("Loaded page ID: " + pageId);
     })
     .catch((error) => {
@@ -62,12 +70,11 @@ onMounted(() => {
 });
 */
 watch(props, (newP, oldP) => {
-  console.log("props changed")
+  console.log("props changed");
   //ページを切り替えたら今のページを保存して
   //新しいページを開く
-  loadPageData(newP.currentPageId)
+  loadPageData(newP.currentPageId);
 });
-
 
 /*離脱時の処理を調べる
 onbeforeunload(() => {
