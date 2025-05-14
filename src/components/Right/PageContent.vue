@@ -4,14 +4,14 @@
     <div
       class="focus:outline-none focus:ring-0 text-4xl font-bold h-12 selection:bg-blue-200"
       contenteditable="true"
-    >Header</div>
+    >
+      Header
+    </div>
     <div class="text-sm text-gray-400 font-bold">
       <div>Created: 2025-01-01 12:00</div>
       <div>Updated: 2025-01-01 12:00</div>
     </div>
-    <div>
-      
-    </div>
+    <div></div>
   </div>
 </template>
 
@@ -26,6 +26,9 @@ const props = defineProps({
   db: Firestore,
   currentPageId: String,
 });
+
+//現在のページIDを管理
+const currentPageId = ref();
 
 //ページデータを格納する
 const pageData = ref(DocumentSnapshot);
@@ -54,8 +57,18 @@ const loadPageData = (pageId) => {
     });
 };
 
-onMounted(()=>{
+onMounted(() => {
   //ページ読み込み時にデータ取得
-  loadPageData(props.currentPageId)
-})
+  loadPageData(props.currentPageId);
+});
+
+watch(currentPageId, (newPageId, oldPageId) => {
+  //ページを切り替えたら今のページを保存して
+  //新しいページを開く
+});
+
+onbeforeunload(() => {
+  alert("unmounttest")
+  //今のページを保存する
+});
 </script>
