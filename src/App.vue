@@ -16,14 +16,20 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 const isLoggedIn = ref(false);
 const userUid = ref("");
 
+const fbApiKey = import.meta.env.VITE_FIREBASE_APIKEY
+const fbAuthDomain = import.meta.env.VITE_FIREBASE_AUTHDOMAIN
+const fbProjectId = import.meta.env.VITE_FIREBASE_PROJECTID
+const fbStorageBucket = import.meta.env.VITE_FIREBASE_STORAGEBUCKET
+const fbMsgSenderId = import.meta.env.VITE_FIREBASE_MESSAGINGSENDERID
+const fbAppId = import.meta.env.VITE_FIREBASE_APPID
 //Firebase準備
 const firebaseConfig = {
-  apiKey: "AIzaSyDGtWbXsHGQ3kKoahKhwljnTZjjBp9wFmE",
-  authDomain: "try-vue-firebase-8bf69.firebaseapp.com",
-  projectId: "try-vue-firebase-8bf69",
-  storageBucket: "try-vue-firebase-8bf69.firebasestorage.app",
-  messagingSenderId: "52805983968",
-  appId: "1:52805983968:web:334b2cd4bdfbf3e70a7a85",
+  apiKey: fbApiKey,
+  authDomain: fbAuthDomain,
+  projectId: fbProjectId,
+  storageBucket: fbStorageBucket,
+  messagingSenderId: fbMsgSenderId,
+  appId: fbAppId,
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
