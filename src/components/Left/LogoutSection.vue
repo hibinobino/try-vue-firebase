@@ -4,6 +4,7 @@
 
 <script setup>
 import { getAuth } from "firebase/auth";
+import { onMounted } from "vue";
 
 const googleLogout = () => {
   signOut(getAuth())
@@ -15,4 +16,9 @@ const googleLogout = () => {
       // An error happened.
     });
 };
+
+onMounted(()=>{
+  
+  console.log("LogoutSection")
+})
 </script>

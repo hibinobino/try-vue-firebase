@@ -8,7 +8,6 @@
 <script setup>
 import { getAuth } from "firebase/auth";
 import { Firestore, addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { onMounted } from "vue";
 
 //Firestore情報を引き継ぐ
 const props = defineProps({
@@ -16,7 +15,7 @@ const props = defineProps({
 });
 
 //ページの追加完了を報告する
-const emits = defineEmits(["added-new-page"])
+const emits = defineEmits(["new-page"])
 
 const user = getAuth().currentUser
 
@@ -38,7 +37,7 @@ const addPage = () => {
       .then((newDoc) => {
         console.log("Created new page.");
         //ページの追加を親に報告する
-        emits("added-new-page",newDoc)
+        emits("new-page",newDoc.id)
       })
       .catch((error) => {
         console.log(error.message);
@@ -46,7 +45,4 @@ const addPage = () => {
   }
 };
 
-onMounted(()=>{
-  console.log("Mounted PageListSection-Header.vue")
-})
 </script>

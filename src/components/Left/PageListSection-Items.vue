@@ -22,11 +22,12 @@ import {
   QueryDocumentSnapshot,
   where,
 } from "firebase/firestore";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 //ページ情報を受信する
 const props = defineProps({
   db: Firestore,
+  currentPageId: String
 });
 
 const selectedPageId = ref("");
@@ -63,6 +64,7 @@ const deletePage = (pageSnap) => {
     .catch((error) => {
       console.log(error.message);
     });
+    loadPageItems()
 };
 
 const selectPage = (pageId) => {
@@ -76,4 +78,10 @@ const selectPage = (pageId) => {
 onMounted(() => {
   loadPageItems()
 });
+
+watch(props,(newP,oldP)=>{
+  loadPageItems()
+  selectedPageId.value=newP.currentPageId
+  console.log("watch updated")
+})
 </script>

@@ -60,6 +60,8 @@ console.log("check")
       }
     })
     .catch((error) => {});
+
+  console.log("UserInfo")
 });
 
 </script>

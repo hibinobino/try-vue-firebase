@@ -5,17 +5,16 @@
         <div class="flex-grow">
           <UserInfoSection :db="db" />
 
-          <PageListHeader :db="db" @added-new-page="loadPageItems" />
+          <PageListHeader :db="db" @new-page="setCurrentPageId"/>
           <PageListItems
             :db="db"
-            :pages="pageItems"
-            @deleted-page="loadPageItems"
+            :currentPageId="currentPageId"
             @select-page="setCurrentPageId"
           />
         </div>
         <LogoutSection />
       </div>
-      <PageContent :current-page-id="currentPageId" :db="db"/>
+      <PageContent :currentPageId="currentPageId" :db="db"/>
     </div>
   </div>
 </template>
@@ -28,7 +27,7 @@ import UserInfoSection from "./Left/UserInfoSection.vue";
 import LogoutSection from "./Left/LogoutSection.vue";
 import { getAuth, signOut } from "firebase/auth";
 import { doc, Firestore, updateDoc, serverTimestamp } from "firebase/firestore";
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const props = defineProps({
   db: Firestore,
@@ -42,8 +41,6 @@ const currentPageId = ref("");
 const setCurrentPageId = (pageId) => {
   currentPageId.value = pageId;
 };
-
-
 </script>
 
 <style scoped></style>

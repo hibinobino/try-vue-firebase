@@ -5,13 +5,13 @@
       class="focus:outline-none focus:ring-0 text-4xl font-bold h-12 selection:bg-blue-200"
       contenteditable="true"
     >
-      Header
+      {{ name }}
     </div>
     <div class="text-sm text-gray-400 font-bold">
       <div>Created: 2025-01-01 12:00</div>
       <div>Updated: 2025-01-01 12:00</div>
     </div>
-    <div></div>
+    <div>{{ mdParser.parse(mdContent) }}</div>
   </div>
 </template>
 
@@ -33,14 +33,11 @@ const currentPageId = ref();
 //ページデータを格納する
 const pageData = ref(DocumentSnapshot);
 
+const mdContent = ref("")
+const name =ref("")
+
 //mdContentをMarkDownに変換する用
 const mdParser = new Marked();
-
-//currentPageIdが変わったらページを再読み込みする
-watch(props.currentPageId, (newPageId) => {
-  alert("Opened new page: " + newPageId + "\nOld page was: " + currentPageId);
-  loadPageData();
-});
 
 //ページ読み込み
 const loadPageData = (pageId) => {
@@ -49,26 +46,32 @@ const loadPageData = (pageId) => {
 
   getDoc(docRef)
     .then((docSnap) => {
-      pageData.value = docSnap.data();
+      mdContent.value=docSnap.data().mdContent
+      name.value=docSnap.data().name
       console.log("Loaded page ID: " + pageId);
     })
     .catch((error) => {
-      console.log("loadPageData failed.");
+      console.log("loadPageData failed." + error.message);
     });
 };
 
+/*
 onMounted(() => {
   //ページ読み込み時にデータ取得
   loadPageData(props.currentPageId);
 });
-
-watch(currentPageId, (newPageId, oldPageId) => {
+*/
+watch(props, (newP, oldP) => {
+  console.log("props changed")
   //ページを切り替えたら今のページを保存して
   //新しいページを開く
+  loadPageData(newP.currentPageId)
 });
 
+
+/*離脱時の処理を調べる
 onbeforeunload(() => {
   alert("unmounttest")
   //今のページを保存する
-});
+});*/
 </script>
