@@ -2,38 +2,20 @@
   <div class="right section">
     <!--ページタイトル-->
     <PageTitle :title="name" @title-edit="updateTitle" />
-    <div class="text-sm text-gray-400 font-bold">
-      <div>Created: 2025-01-01 12:00</div>
-      <div>Updated: 2025-01-01 12:00</div>
-    </div>
-    <div
-      v-html="mdParser.parse(mdContent)"
-      contenteditable="true"
-      class="focus:outline-none focus:ring-0"
-    ></div>
-    <div
-      v-html="
-        mdParser.parse(
-          '# This is an H1\n\n## This is an H2\n\n###### This is an H6'
-        )
-      "
-      contenteditable="true"
-      class="focus:outline-none focus:ring-0"
-    ></div>
+    <PageMdContent :mdContent="mdContent" />    
   </div>
 </template>
 
 <script setup>
 import {
   doc,
-  DocumentSnapshot,
   Firestore,
   getDoc,
   updateDoc,
 } from "firebase/firestore";
-import { Marked } from "marked";
-import { onMounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import PageTitle from "./PageTitle.vue";
+import PageMdContent from "./PageMdContent.vue";
 
 //親コンポーネントから受け取るページの内容
 //読み取り専用
@@ -42,17 +24,10 @@ const props = defineProps({
   currentPageId: String,
 });
 
-//現在のページIDを管理
-const currentPageId = ref();
 
-//ページデータを格納する
-const pageData = ref(DocumentSnapshot);
-
-const mdContent = ref("");
 const name = ref("");
+const mdContent = ref("");
 
-//mdContentをMarkDownに変換する用
-const mdParser = new Marked();
 
 //ページ読み込み
 const loadPageData = (pageId) => {
@@ -70,12 +45,6 @@ const loadPageData = (pageId) => {
     });
 };
 
-/*
-onMounted(() => {
-  //ページ読み込み時にデータ取得
-  loadPageData(props.currentPageId);
-});
-*/
 watch(props, (newP, oldP) => {
   console.log("props changed");
   //ページを切り替えたら今のページを保存して
