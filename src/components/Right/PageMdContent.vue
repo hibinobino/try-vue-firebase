@@ -41,6 +41,7 @@ const mdContentEdit = (e) => {
 };
 
 watch(props, (newP, oldP) => {
-  mdContentText.value = newP.title;
+  mdContentText.value = newP.mdContent;
+  mdContentLines.value = mdContentText.value.split("\n")
 });
 </script>
