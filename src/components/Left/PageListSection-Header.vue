@@ -32,7 +32,7 @@ const addPage = () => {
       name: strName,
       uid: user.uid,
       createdDateTime: serverTimestamp(),
-      mdContent: "## Header 2/n/n- Test List  /nNext Line",
+      mdContent: "## Header 2\n\n- Test List  \nNext Line",
     })
       .then((newDoc) => {
         console.log("Created new page.");
