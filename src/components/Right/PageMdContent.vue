@@ -41,7 +41,7 @@ const mdParser = new Marked();
 
 const onInput_updateMdContent = (index, event) => {
   //該当の配列の内容を更新
-  mdContentLines.value[i] = event.target.innerText;
+  mdContentLines.value[index] = event.target.innerText;
 updateWholeContent()
 };
 
@@ -60,18 +60,35 @@ const onBackSpace = (index, event) =>{
   if (!selection.rangeCount) return;
 
   const range = selection.getRangeAt(0);
-  const offset = range.startOffset; //キャレット位置
+  const offset = range.startOffset; //キャレット位置確認
 
-  if (offset != 0) return
+  if (offset != 0) return //先頭確認
+
+  //行の内容を取得する
+  const before = mdContentLines.value[index-1]
+  const current = mdContentLines.value[index]
 
   //上の行に現在の行を合体させる
-  mdContentLines.value[index-1]+=mdContentLines.value[index]
+  mdContentLines.value[index-1]+=current
   
   //現在の行を削除する
   mdContentLines.value.splice(index,1)
   
   //本文全体を更新
   updateWholeContent()
+
+  //キャレットを前の行の末尾に置く
+  const blockDivs = refRootDiv.value.querySelectorAll("[contenteditable]");
+  const target = blockDivs[index -1];
+  if (!target) return;
+
+  target.focus(); // まずフォーカス
+  const newRange = document.createRange();
+  newRange.selectNodeContents(target)
+  //newRange.collapse(true); // 範囲を1点に
+  selection.removeAllRanges();
+  selection.addRange(newRange);
+
 }
 
 const onEnter_BreakLine = (index, event) => {
@@ -100,8 +117,8 @@ const onEnter_BreakLine = (index, event) => {
   updateWholeContent()
 
   //キャレットを次の行の先頭に置く
-  const editableDivs = refRootDiv.value.querySelectorAll("[contenteditable]");
-  const target = editableDivs[index + 1];
+  const blockDivs = refRootDiv.value.querySelectorAll("[contenteditable]");
+  const target = blockDivs[index + 1];
   if (!target) return;
 
   target.focus(); // まずフォーカス
