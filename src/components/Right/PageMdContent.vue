@@ -42,11 +42,14 @@ const mdParser = new Marked();
 const onInput_updateMdContent = (index, event) => {
   //該当の配列の内容を更新
   mdContentLines.value[i] = event.target.innerText;
+updateWholeContent()
+};
 
+const updateWholeContent =()=>{  
   //本文全体を更新
   mdContentText.value = mdContentLines.value.join("\n");
   mdContentLines.value = mdContentText.value.split("\n");
-};
+}
 
 const onBackSpace = (index, event) =>{
   //編集中のブロックが1行目の場合、中止する
@@ -68,8 +71,7 @@ const onBackSpace = (index, event) =>{
   mdContentLines.value.splice(index,1)
   
   //本文全体を更新
-  mdContentText.value = mdContentLines.value.join("\n");
-  mdContentLines.value = mdContentText.value.split("\n");
+  updateWholeContent()
 }
 
 const onEnter_BreakLine = (index, event) => {
@@ -95,8 +97,7 @@ const onEnter_BreakLine = (index, event) => {
   mdContentLines.value.splice(index + 1, 0, after);
 
   //本文全体を更新
-  mdContentText.value = mdContentLines.value.join("\n");
-  mdContentLines.value = mdContentText.value.split("\n");
+  updateWholeContent()
 
   //キャレットを次の行の先頭に置く
   const editableDivs = refRootDiv.value.querySelectorAll("[contenteditable]");
