@@ -15,8 +15,8 @@
         @keydown.enter.prevent="(e) => onEnter_BreakLine(i, e)"
         @keydown.backspace = "(e) => onBackSpace(i, e)"
         @keydown.delete = "(e) => onDelete(i, e)"
-        @keydown.down.prevent = "(e) => onDownKey(i, e)"
-        @keydown.up.prevent = "(e) => onUpKey(i, e)"
+        @keydown.down.prevent = "(e) => onUpDownKey(i, e,1)"
+        @keydown.up.prevent = "(e) => onUpDownKey(i, e,-1)"
       >
         {{ line }}
       </div>
@@ -91,6 +91,30 @@ const onBackSpace = (index, event) =>{
   //newRange.collapse(true); // 範囲を1点に
   selection.removeAllRanges();
   selection.addRange(newRange);
+
+}
+
+const onUpDownKey = (index,event,shiftd,offset=0) =>{
+
+  //一つ下の行を取得
+  const blockDivs = refRootDiv.value.querySelectorAll("[contenteditable]");
+  const target = blockDivs[index + shiftd];
+  if (!target) return;
+
+  target.focus(); // まずフォーカス
+  const newRange = document.createRange();
+  const sel = window.getSelection();
+
+  const textNode = target.firstChild;
+  if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+    newRange.setStart(textNode, 0); // 先頭（0文字目）
+  } else {
+    newRange.setStart(target, 0); // テキストが無い場合でも対応
+  }
+
+  newRange.collapse(true); // 範囲を1点に
+  sel.removeAllRanges();
+  sel.addRange(newRange);
 
 }
 
