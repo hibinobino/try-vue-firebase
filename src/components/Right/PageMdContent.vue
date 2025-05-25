@@ -14,6 +14,9 @@
         @input="(e) => onInput_updateMdContent(i, e)"
         @keydown.enter.prevent="(e) => onEnter_BreakLine(i, e)"
         @keydown.backspace = "(e) => onBackSpace(i, e)"
+        @keydown.delete = "(e) => onDelete(i, e)"
+        @keydown.down.prevent = "(e) => onDownKey(i, e)"
+        @keydown.up.prevent = "(e) => onUpKey(i, e)"
       >
         {{ line }}
       </div>
