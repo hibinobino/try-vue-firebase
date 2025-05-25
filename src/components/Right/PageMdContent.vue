@@ -13,6 +13,7 @@
         contenteditable="true"
         @input="(e) => onInput_updateMdContent(i, e)"
         @keydown.enter.prevent="(e) => onEnter_BreakLine(i, e)"
+        @keydown.backspace = "(e) => onBackSpace(i, e)"
       >
         {{ line }}
       </div>
@@ -46,6 +47,30 @@ const onInput_updateMdContent = (index, event) => {
   mdContentText.value = mdContentLines.value.join("\n");
   mdContentLines.value = mdContentText.value.split("\n");
 };
+
+const onBackSpace = (index, event) =>{
+  //編集中のブロックが1行目の場合、中止する
+  if(index == 0 ) return
+
+  //キャレットが先頭になければ中止する
+  const selection = window.getSelection();
+  if (!selection.rangeCount) return;
+
+  const range = selection.getRangeAt(0);
+  const offset = range.startOffset; //キャレット位置
+
+  if (offset != 0) return
+
+  //上の行に現在の行を合体させる
+  mdContentLines.value[index-1]+=mdContentLines.value[index]
+  
+  //現在の行を削除する
+  mdContentLines.value.splice(index,1)
+  
+  //本文全体を更新
+  mdContentText.value = mdContentLines.value.join("\n");
+  mdContentLines.value = mdContentText.value.split("\n");
+}
 
 const onEnter_BreakLine = (index, event) => {
   //キャレットの位置を取得する
